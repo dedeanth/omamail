@@ -53,6 +53,14 @@ class Diagnostics(unittest.TestCase):
         self.assertLessEqual(len(json.loads(log.read_text())), 100)
         self.assertLess(log.stat().st_size, 65536)
 
+    def test_backend_provider_identifiers_survive_redaction(self):
+        codes = ['gmail_signed_out', 'calendar_auth_refused', 'upload_capacity_exceeded']
+        self.call('record', [self.event(code) for code in codes])
+        data = (self.folder / 'errors.json').read_text()
+        for code in codes:
+            self.assertIn(code, data)
+        self.assertNotIn('unknown_error', data)
+
     def test_only_explicit_open_launches_agent_with_report_path(self):
         self.call('record', [self.event()])
         self.call('open')

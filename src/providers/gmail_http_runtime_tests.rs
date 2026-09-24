@@ -336,7 +336,10 @@ async fn auth_and_invalid_json_return_only_static_errors() {
     let global = r#"{"error":{"errors":[{"domain":"usageLimits","reason":"rateLimitExceeded","message":"Rate Limit Exceeded"}],"code":403,"message":"Rate Limit Exceeded"}}"#;
     let daily = r#"{"error":{"errors":[{"domain":"usageLimits","reason":"dailyLimitExceeded","message":"Daily Limit Exceeded"}],"code":403,"message":"Daily Limit Exceeded"}}"#;
     let scope = r#"{"error":{"errors":[{"domain":"global","reason":"insufficientPermissions","message":"Insufficient Permission"}],"code":403,"message":"Insufficient Permission"}}"#;
+    let grant = r#"{"error":"invalid_grant","error_description":"Token has been expired or revoked."}"#;
     for (status, body, error) in [
+        (400, grant, "gmail_signed_out"),
+        (400, "synthetic-secret", "gmail_http_failed"),
         (401, "synthetic-secret", "gmail_unauthorized"),
         (403, "synthetic-secret", "gmail_forbidden"),
         (403, scope, "gmail_forbidden"),
