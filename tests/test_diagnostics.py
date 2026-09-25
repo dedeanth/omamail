@@ -56,7 +56,8 @@ class Diagnostics(unittest.TestCase):
         self.assertLess(log.stat().st_size, 65536)
 
     def test_backend_provider_identifiers_survive_redaction(self):
-        codes = ['gmail_http_failed', 'calendar_auth_refused', 'upload_capacity_exceeded']
+        codes = ['gmail_http_failed', 'calendar_auth_refused', 'upload_capacity_exceeded',
+                 'invalid_upload_encoding']
         self.call('record', [self.event(code) for code in codes])
         data = (self.folder / 'errors.json').read_text()
         for code in codes:
@@ -67,7 +68,7 @@ class Diagnostics(unittest.TestCase):
         spec = importlib.util.spec_from_file_location('diagnostics', SCRIPT)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        produced = re.compile(r'(?:Err\(|=> *|or\(|map_err\(\|_\| *)"((?:gmail|calendar|upload|auth)_[a-z_]+)"')
+        produced = re.compile(r'(?:Err\(|=> *|or\(|map_err\(\|_\| *)"((?:gmail|calendar|upload|auth)_[a-z_]+|invalid_upload_encoding)"')
         codes = set()
         for path in (ROOT / 'src').rglob('*.rs'):
             if path.name == 'tests.rs' or path.stem.endswith(('_tests', '_test')):

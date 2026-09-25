@@ -45,7 +45,8 @@ gmail_keyring_failed gmail_length_required gmail_queue_dropped gmail_queue_full 
 gmail_response_too_large gmail_session_invalidated gmail_session_limit gmail_timeout
 gmail_token_account_invalid gmail_token_invalid gmail_token_missing gmail_unauthorized
 upload_capacity_exceeded upload_chunk_too_large upload_id_exhausted upload_incomplete
-upload_not_found upload_offset_mismatch upload_size_exceeded'''.split()) | {
+upload_not_found upload_offset_mismatch upload_size_exceeded
+invalid_upload_encoding'''.split()) | {
     'Backend unavailable', 'Backend stopped', 'Backend response timed out',
     'Backend request timed out', 'Request cancelled', 'Too many pending requests',
     'Incompatible backend', 'Invalid backend response', 'Backend is shutting down',
