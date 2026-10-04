@@ -11,6 +11,7 @@ import "../message/Calendar.js" as Calendar
 import "../message/Unsubscribe.js" as Unsub
 import "../message/Outbox.js" as Outbox
 import "Model.js" as Model
+import "DateFilter.js" as DateFilter
 import "Accounts.js" as Accounts
 import "../providers/Registry.js" as Provider
 import "../providers/ImapProtocol.js" as Imap
@@ -490,10 +491,15 @@ Item {
   readonly property string providerQueryInput: JSON.stringify([providerId, mailboxKey, searchQuery, defaultQuery])
   readonly property bool providerQueryNeedsResolution: searchQuery.trim() !== ""
     || (mailboxKey === "inbox" && defaultQuery.trim() !== "" && defaultQuery.trim() !== Provider.get(providerId).inheritedDefault)
-  readonly property string effectiveQuery: rawQuery !== "" ? rawQuery
+  // An inbox date filter (DateFilter.js), kept across mailboxes and searches;
+  // its days are counted from when it was picked.
+  property string dateFilter: ""
+  property real dateFilterAt: 0
+  readonly property bool canFilterByDate: providerId === "gmail"
+  readonly property string effectiveQuery: DateFilter.apply(rawQuery !== "" ? rawQuery
     : searchRaw !== "" ? searchRaw
     : resolvedProviderInput === providerQueryInput ? resolvedProviderQuery
-    : Provider.mailboxFor(providerId, mailboxKey).query
+    : Provider.mailboxFor(providerId, mailboxKey).query, dateFilter, providerId, dateFilterAt)
   readonly property bool hasMore: nextPageToken !== ""
   // A cached search can already have rows on screen while this stays true.
   // Kept separate from the generic list state so the view can say that the
@@ -2445,6 +2451,19 @@ Item {
     searchRaw = ""
     rawQuery = ""
     rawLabelId = ""
+    clearSelection()
+    messages = []
+    previewMessages = []
+    loadedDepth = 0
+    listLoaded = false
+    loadMessages(false)
+  }
+
+  function setDateFilter(key) {
+    key = String(key || "")
+    if (!canFilterByDate || !DateFilter.isKnown(key) || (key === dateFilter && key === "")) return
+    dateFilter = key
+    dateFilterAt = Date.now()
     clearSelection()
     messages = []
     previewMessages = []

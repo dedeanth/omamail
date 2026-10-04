@@ -73,6 +73,28 @@ Item {
       compare(account.effectiveQuery, "in:trash")
       compare(account.searchQuery, "")
     }
+    function test_date_filter_narrows_gmail_and_leaves_other_providers_alone() {
+      var backend = createTemporaryObject(backendFactory, parent)
+      var gmail = createTemporaryObject(accountFactory, parent, { backend: backend, providerId: "gmail" })
+      verify(gmail.canFilterByDate)
+      var before = gmail.loads
+      gmail.setDateFilter("today")
+      compare(gmail.dateFilter, "today")
+      compare(gmail.loads, before + 1, "a new filter reloads the list")
+      verify(/^in:inbox after:\d+$/.test(gmail.effectiveQuery), gmail.effectiveQuery)
+      gmail.selectMailbox("starred")
+      verify(/^is:starred after:\d+$/.test(gmail.effectiveQuery), "the filter survives a mailbox change")
+      gmail.setDateFilter("bogus")
+      compare(gmail.dateFilter, "today")
+      gmail.setDateFilter("")
+      compare(gmail.effectiveQuery, "is:starred")
+
+      var imap = createTemporaryObject(accountFactory, parent, { backend: backend })
+      verify(!imap.canFilterByDate)
+      imap.setDateFilter("today")
+      compare(imap.dateFilter, "")
+      compare(imap.effectiveQuery, "folder:INBOX")
+    }
     function test_label_query_is_native_and_late_navigation_reply_is_ignored() {
       var backend = createTemporaryObject(backendFactory, parent)
       var account = createTemporaryObject(accountFactory, parent, { backend: backend })

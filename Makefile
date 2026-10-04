@@ -4,7 +4,7 @@ QML_FILES := ui/Service.qml ui/BarWidget.qml ui/App.qml ui/compose/RecoveryContr
 	ui/tests/compatibility/tst_published_agent.qml \
 	ui/backend/Backend.qml ui/backend/Runtime.qml ui/diagnostics/Diagnostics.qml \
 	ui/components/BackendSetup.qml ui/components/OmamailLogo.qml \
-	ui/account/MailAccount.qml ui/account/BackendSync.qml ui/account/SendQueue.qml ui/account/Intents.qml ui/account/BatchAction.qml ui/account/Rsvp.qml ui/account/LabelActions.qml ui/account/Unsubscribe.qml ui/account/NewMailNotification.qml ui/account/ContactBook.qml \
+	ui/account/MailAccount.qml ui/account/BackendSync.qml ui/account/SendQueue.qml ui/account/Intents.qml ui/account/BatchAction.qml ui/account/Rsvp.qml ui/account/LabelActions.qml ui/account/Unsubscribe.qml ui/account/NewMailNotification.qml ui/account/ContactBook.qml ui/components/DateFilterBar.qml \
 	ui/cache/CacheStore.qml ui/cache/BodyCache.qml \
 	ui/providers/AuthManager.qml ui/providers/GmailApiClient.qml \
 	ui/providers/OutlookAuth.qml \
@@ -134,6 +134,7 @@ test-js:
 	node ui/tests/test_recipients.js
 	node ui/tests/test_senders.js
 	node ui/tests/test_oauth.js
+	node ui/tests/test_date_filter.js
 	node ui/tests/test_microsoft_oauth.js
 	node ui/tests/test_credentials.js
 	node ui/tests/test_secrets.js
