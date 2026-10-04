@@ -1,5 +1,5 @@
 {
-  "apiVersion": 6,
+  "apiVersion": 7,
   "releasedApiVersion": 6,
   "protocolVersion": 1,
   "methods": [
@@ -89,6 +89,7 @@
     "cache.calendarRead",
     "cache.calendarPut",
     "contacts.suggest",
+    "contacts.google",
     "attachment.read",
     "attachment.store",
     "attachment.storeUpload",
@@ -512,7 +513,7 @@
           "recipient@example.org"
         ],
         "subject": "Contract preview",
-        "body": "Hello \u5408\u6210\nSecond line"
+        "body": "Hello 合成\nSecond line"
       },
       "equals": {
         "dryRun": true,
@@ -523,7 +524,7 @@
           "recipient@example.org"
         ],
         "subject": "Contract preview",
-        "body": "Hello \u5408\u6210\nSecond line",
+        "body": "Hello 合成\nSecond line",
         "attachments": []
       }
     },
@@ -788,7 +789,7 @@
         "now": 1700000000000
       },
       "equals": {
-        "body.text": "Hello \u5408\u6210",
+        "body.text": "Hello 合成",
         "summary.subject": "API fixture",
         "summary.id": "fixture"
       },
@@ -1263,10 +1264,25 @@
       "types": {
         "ticket": "string"
       }
+    },
+    {
+      "name": "Google Contacts refuses an account that is not a Gmail address",
+      "method": "contacts.google",
+      "params": {
+        "accountId": "imap:synthetic@example.invalid"
+      },
+      "errorCode": -32602,
+      "equals": {
+        "message": "Invalid params"
+      }
     }
   ],
   "unreleased": {
-    "methods": [],
-    "cases": []
+    "methods": [
+      "contacts.google"
+    ],
+    "cases": [
+      "Google Contacts refuses an account that is not a Gmail address"
+    ]
   }
 }

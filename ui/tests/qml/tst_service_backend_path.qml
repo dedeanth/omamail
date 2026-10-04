@@ -41,6 +41,34 @@ Item {
       compare(service.backendCanCheckMicrosoftConnection, false)
       compare(service.backendCanDiscoverCalendars, false)
     }
+    function test_google_contacts_requirement_is_fixed_at_api_7() {
+      var service = createTemporaryObject(factory, parent)
+      verify(service !== null)
+      var backend = service.backend
+      backend.launchEnabled = true
+      backend.connected = true
+      backend.protocolInfo = ({ apiVersion: 6 })
+      compare(service.backendCanSuggestGoogleContacts, false)
+      backend.protocolInfo = ({ apiVersion: 7 })
+      compare(service.backendCanSuggestGoogleContacts, true)
+      backend.latestApiVersion = 8
+      compare(service.backendCanSuggestGoogleContacts, true,
+        "a later API must not disable Google Contacts suggestions")
+      backend.connected = false
+      compare(service.backendCanSuggestGoogleContacts, false)
+    }
+    function test_contacts_loading_resets_when_the_backend_drops() {
+      var service = createTemporaryObject(factory, parent)
+      verify(service !== null)
+      var backend = service.backend
+      backend.launchEnabled = true
+      backend.connected = true
+      backend.protocolInfo = ({ apiVersion: 7 })
+      service.refreshRecipientContacts()
+      compare(service.contactsLoading, true)
+      backend.connected = false
+      compare(service.contactsLoading, false, "a dropped backend must not leave contacts loading")
+    }
     function test_calendar_requests_obey_the_connected_api() {
       var service = createTemporaryObject(factory, parent)
       verify(service !== null)
