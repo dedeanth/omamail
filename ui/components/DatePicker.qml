@@ -156,7 +156,7 @@ QQC.Popup {
           textFormat: Text.PlainText
           horizontalAlignment: Text.AlignHCenter
           verticalAlignment: Text.AlignVCenter
-          color: Style.mutedColorFor(root.textColor, root.backgroundColor)
+          color: Qt.alpha(root.textColor, 0.6)
           font.family: root.fontFamily
           font.pixelSize: Style.font.caption
         }
